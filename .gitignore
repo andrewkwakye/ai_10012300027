@@ -1,0 +1,48 @@
+# CS4241 - Introduction to Artificial Intelligence
+# Author: Andrew Kofi Kwakye
+# Index: 10012300027
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# --- Virtual envs ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Secrets ---
+.env
+.env.local
+*.key
+.streamlit/secrets.toml
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# --- Project-specific ---
+# Raw downloads are fine to commit (small) but processed/embeddings can be huge
+data/processed/*.npy
+data/processed/*.pkl
+data/processed/chunks.jsonl
+logs/*.log
+
+# Keep the folder structure visible in git
+!data/processed/.gitkeep
+!logs/.gitkeep

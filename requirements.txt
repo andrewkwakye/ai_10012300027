@@ -1,0 +1,33 @@
+# CS4241 - Introduction to Artificial Intelligence
+# Author: Andrew Kofi Kwakye
+# Index: 10012300027
+#
+# Runtime dependencies. No LangChain / LlamaIndex / pre-built RAG frameworks.
+
+# --- Core ---
+python-dotenv==1.0.1
+numpy==1.26.4
+pandas==2.2.2
+
+# --- LLM (Groq API) + local embeddings ---
+# We deliberately split providers: Groq for fast chat inference; embeddings
+# run locally with sentence-transformers to avoid rate limits entirely.
+groq==0.11.0
+# httpx 0.28 dropped the `proxies` kwarg that groq 0.11 still passes; pin
+# below that to keep the Groq SDK working.
+httpx<0.28.0
+sentence-transformers==3.0.1
+tiktoken==0.7.0
+
+# --- Document loading ---
+pypdf==4.3.1
+requests==2.32.3
+
+# --- Keyword search (for hybrid retrieval) ---
+rank-bm25==0.2.2
+
+# --- UI ---
+streamlit==1.38.0
+
+# --- Light text utilities ---
+regex==2024.5.15
