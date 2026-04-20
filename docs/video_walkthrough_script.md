@@ -13,7 +13,7 @@ The exam caps the video at **2 minutes**. Below is a script you can read in ~1m5
 
 ## 0:15 – 0:40 — Architecture (show `docs/architecture.md` diagram on screen)
 
-> "The pipeline has two phases. Offline: I clean the CSV and PDF, split them with a per-source chunker — rows for the CSV, a recursive paragraph-to-sentence splitter for the PDF — embed every chunk with Google's text-embedding-004, and save a NumPy matrix plus a JSONL metadata file. Online: the query is embedded, scored against every vector, and against a BM25 keyword index I also built on the same tokens. I combine them with an alpha weight, that's my hybrid search."
+> "The pipeline has two phases. Offline: I clean the CSV and PDF, split them with a per-source chunker — rows for the CSV, a recursive paragraph-to-sentence splitter for the PDF — embed every chunk locally with sentence-transformers (all-MiniLM-L6-v2, 384-dim), and save a NumPy matrix plus a JSONL metadata file. Online: the query is embedded, scored against every vector, and against a BM25 keyword index I also built on the same tokens. I combine them with an alpha weight, that's my hybrid search. Chat inference runs on Groq's LPU using Llama 3.3 70B."
 
 ## 0:40 – 1:05 — Demo an answerable query (share Streamlit window)
 

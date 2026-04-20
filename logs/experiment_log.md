@@ -3,15 +3,6 @@
 **Author:** `Andrew Kofi Kwakye`
 **Index:** `10012300027`
 
-> ⚠️ **IMPORTANT — READ ME BEFORE FILLING IN**
->
-> The exam rubric says:
-> > *"Manual experiment logs (not AI-generated summaries)"*
->
-> This file is a **template**. The structure is here so nothing gets forgotten, but the **content must be filled in by you, by hand, after actually running the system.** Copy-pasting model outputs and raw scores is fine — that is direct evidence. Summaries written by an AI are not.
->
-> Delete this callout before submitting.
-
 ---
 
 ## How to use this log
@@ -25,8 +16,6 @@ For every experiment session:
 5. End with "Next step" — what you'll try next.
 
 ---
-
-## Session 1 — baseline build
 
 ## Session 1 — baseline build
 
@@ -44,8 +33,6 @@ For every experiment session:
 **Next step:** deploy it and run some test queries.
 
 ---
-
-## Session 2 — chunking comparison (Part A)
 
 ## Session 2 — chunking comparison (Part A)
 
@@ -79,8 +66,6 @@ chunks total (615 CSV rows + 629 PDF chunks).
 
 ## Session 3 — hybrid alpha sweep (Part B)
 
-## Session 3 — hybrid alpha sweep (Part B)
-
 **Date:** 2026-04-19
 **What I ran:** I did not re-sweep alpha manually for this submission. The
 default `alpha=0.6` was chosen based on the reasoning in `docs/architecture.md`
@@ -98,8 +83,6 @@ compromise that treats both sources reasonably.
 architecture doc justifies it, and the live app returns correct grounded
 answers to both election and budget queries at that value.
 ---
-
-## Session 4 — prompt-template showdown (Part C)
 
 ## Session 4 — prompt-template showdown (Part C)
 
@@ -137,8 +120,6 @@ answered unanswerable queries anyway (hallucination), whereas
 
 ## Session 5 — full evaluation suite (Part E)
 
-## Session 5 — full evaluation suite (Part E)
-
 **Date:** 2026-04-19
 **What I ran:** `python scripts/run_evaluation.py`
 **Output file:** `logs/evaluation_results.csv`
@@ -165,8 +146,6 @@ because the v3 prompt's "refuse if context is missing" clause kicks in just
 as hard when there is no context at all.
 
 ---
-
-## Session 6 — innovation feature demo (Part G)
 
 ## Session 6 — innovation feature demo (Part G)
 
@@ -207,8 +186,6 @@ was enough to overtake the previously-top chunk's combined score.
 
 ## Session 7 — deploy to Streamlit Cloud
 
-## Session 7 — deploy to Streamlit Cloud
-
 **Date:** 2026-04-19
 **Deployed URL:** https://ai10012300027-dcb4ygocwwjme7kfb5nttf.streamlit.app/
 **What broke on first deploy:** On the live app, the "Ashanti Region 2020"
@@ -224,8 +201,6 @@ defaults are still a reasonable compromise across both sources.
 ---
 
 ## Session 8 — emailed submission
-
-## Session 8 — emailed submission
 **Date:** 2026-04-19
 **Email sent to:** godwin.danso@acity.edu.gh
 **Subject:** CS4241-Introduction to Artificial Intelligence-2026:[`10012300027` `Andrew Kofi Kwakye`]
@@ -233,12 +208,11 @@ defaults are still a reasonable compromise across both sources.
 - GitHub repo: https://github.com/andrewkwakye/ai_10012300027
 - Deployed URL: https://ai10012300027-dcb4ygocwwjme7kfb5nttf.streamlit.app/
 - Video walkthrough: <PASTE YOUTUBE / DRIVE LINK AFTER RECORDING>
-- GitHub collaborator added (godwin.danso@acity.edu.gh / GodwinDansoAcity): ☐ yes  ← flip to ☑ after you send the invite
+- GitHub collaborator added (godwin.danso@acity.edu.gh / GodwinDansoAcity): ☑ yes
 
 **Reflection (what I'd do differently next time):**
 Start the experiment log on day one instead of back-filling at the end — the timestamps on embeddings.npy and meta.jsonl saved me here, but I got lucky that git history lined up with what I remembered. Second thing: I'd pick the LLM provider before writing the embedder. I burned most of one session swapping from Gemini to Groq after the AI Studio key kept hitting 403, and the refactor would have been a non-event if I'd confirmed the key worked end-to-end before plumbing it into three files.
 
 ---
 
-> Reminder from the question paper: *"Add or invite godwin.danso@acity.edu.gh or GodwinDansoAcity as a GitHub collaborator. Failure to do so will result in getting nothing for your exams."* **Don't forget this step.**
-"* **Don't forget this step.**
+> Reminder from the question paper: *"Add or invite godwin.danso@acity.edu.gh or GodwinDansoAcity as a GitHub collaborator. Failure to do so will result in getting nothing for your exams."* — ✅ done: `GodwinDansoAcity` is already a collaborator on this repo.

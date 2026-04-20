@@ -21,14 +21,15 @@ Per the exam brief, **no end-to-end RAG framework is used**. LangChain, LlamaInd
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/<YOUR_USERNAME>/ai_10012300027.git
+git clone https://github.com/andrewkwakye/ai_10012300027.git
 cd ai_10012300027
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-# 2. Add your Gemini API key (free at https://aistudio.google.com/app/apikey)
+# 2. Add your Groq API key (free at https://console.groq.com/keys)
 cp .env.example .env
-# then edit .env and paste your GEMINI_API_KEY
+# then edit .env and paste your GROQ_API_KEY
+# embeddings run locally via sentence-transformers — no embedding API key needed
 
 # 3. Build the index (downloads data, chunks, embeds)
 python scripts/download_data.py
@@ -47,11 +48,11 @@ streamlit run app.py
 | `src/logger.py`               | Structured per-stage logger (Part D)                           |
 | `src/data_loader.py`          | CSV + PDF loading and cleaning                                 |
 | `src/chunker.py`              | Three chunking strategies (Part A)                             |
-| `src/embedder.py`             | Gemini embedding wrapper with batching + caching (Part B)      |
+| `src/embedder.py`             | Local sentence-transformers embedding wrapper with caching (Part B) |
 | `src/vector_store.py`         | Custom NumPy vector store (Part B)                             |
 | `src/retriever.py`            | Top-k, hybrid (BM25+vector), query expansion (Part B)          |
 | `src/prompt_builder.py`       | Prompt templates + context-window management (Part C)          |
-| `src/llm.py`                  | Gemini chat-completion wrapper                                 |
+| `src/llm.py`                  | Groq chat-completion wrapper (`llama-3.3-70b-versatile`)       |
 | `src/pipeline.py`             | End-to-end orchestrator (Part D)                               |
 | `src/feedback.py`             | Feedback-loop re-ranker (Part G — innovation)                  |
 | `src/evaluator.py`            | Adversarial tests, RAG-vs-LLM comparison (Part E)              |
@@ -66,15 +67,14 @@ streamlit run app.py
 
 ## Deployment
 
-See `docs/deployment.md`. Short version: Streamlit Community Cloud, point at this repo, set `GEMINI_API_KEY` in the Secrets panel, done.
+See `docs/deployment.md`. Short version: Streamlit Community Cloud, point at this repo, set `GROQ_API_KEY` in the Secrets panel, done.
 
 ## Contact
 
-Deployed URL: _fill in after deploy_
-GitHub: _fill in after push_
-Author email: _fill in_
+Deployed URL: https://ai10012300027-dcb4ygocwwjme7kfb5nttf.streamlit.app/
+GitHub: https://github.com/andrewkwakye/ai_10012300027
+Author email: kwakyeandrewkofi@gmail.com
 
 ---
 
 > All files include the author name and index number at the top, per the exam instructions.
- index number at the top, per the exam instructions.

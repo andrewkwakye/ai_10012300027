@@ -9,7 +9,8 @@
 
 - GitHub account
 - Streamlit Community Cloud account (free) — sign in at https://share.streamlit.io/ with the same GitHub account
-- A Google Gemini API key (https://aistudio.google.com/app/apikey). **Free** — no credit card required. Sign in with any Google account and click "Create API key".
+- A Groq API key (https://console.groq.com/keys). **Free** — no credit card required. Sign in with any Google/GitHub account and click "Create API Key".
+- Embeddings run locally with `sentence-transformers` (`all-MiniLM-L6-v2`), so no embedding API key is required.
 
 ## Step-by-step
 
@@ -21,7 +22,7 @@ git init
 git add .
 git commit -m "Initial commit: RAG chatbot — Andrew Kofi Kwakye 10012300027"
 git branch -M main
-git remote add origin https://github.com/<YOUR_USERNAME>/ai_10012300027.git
+git remote add origin https://github.com/andrewkwakye/ai_10012300027.git
 git push -u origin main
 ```
 
@@ -43,10 +44,10 @@ source .venv/bin/activate         # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 cp .env.example .env
-# edit .env, paste your GEMINI_API_KEY
+# edit .env, paste your GROQ_API_KEY
 
 python scripts/download_data.py   # ~1-2 min
-python scripts/build_index.py     # ~5 min, makes one Gemini call per ~32 chunks
+python scripts/build_index.py     # ~2-3 min, runs sentence-transformers locally (no API calls)
 ```
 
 After build, commit the processed index:
@@ -75,7 +76,9 @@ git push
 3. **Advanced settings** → Python version: 3.11.
 4. **Secrets** → paste:
    ```toml
-   GEMINI_API_KEY = "your-key-here"
+   GROQ_API_KEY = "your-key-here"
+   GROQ_CHAT_MODEL = "llama-3.3-70b-versatile"
+   EMBED_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
    ```
    (TOML format — the quotes are required.)
 5. Click **Deploy**. First build takes ~2 min. You'll get a URL like `https://<something>.streamlit.app`.
@@ -99,15 +102,11 @@ Per the exam:
 
 - **ModuleNotFoundError: tiktoken** → you're on Python 3.12+ and hit the pre-built-wheel gap; pin Python 3.11 in Streamlit Cloud's Advanced settings.
 - **"Index not built yet"** in the app → you forgot step 3; the index files aren't in the repo.
-- **Gemini 403 / 401** → secret `GEMINI_API_KEY` not set, has a typo/trailing space, or was revoked in Google AI Studio.
-- **Gemini 429 (rate limit)** → the free tier allows 15 requests/min for chat. Wait a minute and retry; for bulk evaluation runs, add `time.sleep(4)` between queries.
+- **Groq 401 / 403** → secret `GROQ_API_KEY` not set, has a typo/trailing space, or was revoked in the Groq console.
+- **Groq 429 (rate limit)** → the free tier enforces per-minute token limits. Wait a minute and retry; for bulk evaluation runs, add `time.sleep(2)` between queries.
+- **`TypeError: Client.__init__() got an unexpected keyword argument 'proxies'`** → httpx 0.28 dropped the `proxies` kwarg that `groq==0.11.0` still passes. `requirements.txt` already pins `httpx<0.28.0`; rerun `pip install -r requirements.txt` in the venv.
 - **App sleeps after inactivity** → free tier; it auto-wakes on next request. Don't worry about it for grading.
 - **"embeddings.npy is too large"** → use Git LFS as shown above, or regenerate with fewer chunks.
-
-## Alternative deployments
-
-The code is plain Python — it will also run on Render, Hugging Face Spaces (Streamlit SDK), Railway, or any VM. Streamlit Cloud is just the zero-effort option.
-e, or regenerate with fewer chunks.
 
 ## Alternative deployments
 

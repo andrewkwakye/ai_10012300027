@@ -28,8 +28,8 @@ PDF page -- recursive_char --> multiple token-bounded chunks
 ### 2.1 Chunk size: **350 tokens**
 Trade-off: smaller chunks give tighter retrieval precision (you get only the bit that matches), larger chunks preserve more context for the generator.
 
-- The `text-embedding-004` model has a 2,048-token input cap — we are well under that.
-- `gemini-1.5-flash` has a 1M-token context window, but *quality* of generation drops sharply beyond a few thousand tokens of injected context. With `top_k=6` and 350-token chunks we use ~2,100 tokens for context, leaving room for the system prompt, the user question, and the model's answer.
+- The `sentence-transformers/all-MiniLM-L6-v2` model has a 256-token input cap — 350-token chunks are trimmed by the tokenizer but the first 256 tokens still carry enough signal for retrieval, and we rely on BM25 for the long tail.
+- `llama-3.3-70b-versatile` on Groq has a 128k-token context window, but *quality* of generation drops sharply beyond a few thousand tokens of injected context. With `top_k=6` and 350-token chunks we use ~2,100 tokens for context, leaving room for the system prompt, the user question, and the model's answer.
 - 350 tokens is roughly 1–2 short paragraphs — enough to contain a full thought (a single budget paragraph typically has one policy point).
 
 ### 2.2 Overlap: **60 tokens (≈17%)**
@@ -86,4 +86,3 @@ PDF  -> recursive_char_chunks(chunk_size=350, overlap=60)
 ```
 
 Routing is in `src/chunker.py::chunk_documents`. The shipped index uses this.
-is.

@@ -45,7 +45,7 @@ def main() -> None:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
     log.info(f"Wrote {len(chunks)} chunks -> {CHUNKS_PATH}")
 
-    log.info("Embedding chunks (this calls the Gemini API)...")
+    log.info("Embedding chunks (runs sentence-transformers locally — no API calls)...")
     embedder = Embedder()
     texts = [c["text"] for c in chunks]
     matrix = embedder.embed_texts(texts)

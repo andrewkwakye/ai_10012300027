@@ -3,7 +3,7 @@
 # Index: 10012300027
 """
 Smoke test — verifies every module imports cleanly and pure-Python
-helpers work without an API key. Does NOT hit the Gemini API.
+helpers work without an API key. Does NOT hit the Groq API.
 
 Usage:
     python -m tests.test_smoke
@@ -30,8 +30,9 @@ def test_imports():
         "src.prompt_builder",
         "src.feedback",
         "src.evaluator",
-        # Note: src.embedder and src.llm import google.generativeai — they'll
-        # still import fine without an API key, only instantiation would fail.
+        # Note: src.embedder lazy-loads sentence-transformers and src.llm imports
+        # the Groq SDK — both import fine without an API key, only instantiation
+        # (or, for the embedder, first .embed() call) would fail.
         "src.embedder",
         "src.llm",
         "src.pipeline",
