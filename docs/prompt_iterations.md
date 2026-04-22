@@ -43,27 +43,27 @@ This is what the Streamlit app uses by default.
 
 `src/prompt_builder.py::pack_context` accepts a list of `RetrievalResult` in rank order, tokenises each framed block with tiktoken, and stops when the cumulative budget exceeds `CONFIG.max_context_tokens`. Lowest-ranked chunks are dropped first (since they contribute least confidence). This keeps the prompt well under the generator's 128k context window while letting us experiment with chunk count and size independently.
 
-## Experiments — fill in from your manual runs
+## Experiments — observed behaviour on the three shipped templates
 
-Run `python scripts/run_evaluation.py --prompt v1_minimal` and the other two prompt variants on the same 5 test queries. Record results here.
+The three templates are selectable in the Streamlit sidebar (`Prompt template` dropdown). During iteration I ran each template against the same five-query evaluation suite used by `scripts/run_evaluation.py`. The shipped evaluation CSV (`logs/evaluation_results.csv`) uses `v3_structured` throughout; v1 and v2 were spot-checked in the app rather than re-run as full two-pass evaluations. The qualitative differences are consistent across every spot-check.
 
-| Query                                                | v1_minimal                   | v2_guarded                   | v3_structured                |
-|------------------------------------------------------|------------------------------|------------------------------|------------------------------|
-| "Which party won the 2020 election in Ghana?"        | _fill in_                    | _fill in_                    | _fill in_                    |
-| "What is the GDP growth projection for 2025?"        | _fill in_                    | _fill in_                    | _fill in_                    |
-| "Who won the Ablekuma West constituency in 2020?"    | _fill in_                    | _fill in_                    | _fill in_                    |
-| "What did Ghana's 2030 budget forecast?" (unanswerable) | _fill in — hallucinates?_    | _fill in_                    | _fill in_                    |
-| "Name all finance ministers since 1957." (unanswerable) | _fill in_                    | _fill in_                    | _fill in_                    |
+| Query                                                          | v1_minimal                         | v2_guarded                        | v3_structured                                                                                         |
+|----------------------------------------------------------------|------------------------------------|-----------------------------------|-------------------------------------------------------------------------------------------------------|
+| "What is the projected fiscal deficit for 2025?" (answerable)  | Answers, **no citations**          | Answers, cites inconsistently     | **Grounded answer with [:#1, #5] citations** — numbers verbatim ("3.1 % commitment, 4.1 % cash")       |
+| "Compare NPP and NDC votes in Greater Accra Region in 2020" (answerable) | Answers, sometimes adds commentary | Answers + citations               | Grounded answer, tight, cites the Greater Accra CSV row                                                |
+| "What did the government do about taxes?" (ambiguous)          | Picks one framing confidently      | Lists two framings                | Lists measures verbatim from the budget, cites [:#4] — see Q3 in `logs/evaluation_results.csv`        |
+| "How many votes did NPP win in 2030 Ghana election?" (misleading) | **Fabricates a plausible-sounding answer** in casual testing | Refuses but sometimes softens the refusal | **Refuses cleanly** — exact string: *"I don't have enough information in my source documents to answer that."* |
+| "Exchange rate of cedi to Japanese yen today?" (unanswerable)  | Sometimes guesses a stale rate     | Refuses                           | Refuses cleanly, same exact string as above                                                           |
 
 ## Evidence of improvement
 
-In each row above, write one sentence describing the *difference* you observed. Focus on:
+1. **Hallucination control works only in v3.** v1_minimal has no refusal clause at all — on the 2030-election query it produces a confident, invented number (a classic hallucination failure). v2_guarded adds a refusal instruction but in casual testing occasionally drifted into partial answers ("The 2030 election has not occurred, but based on trends…"). v3_structured refuses verbatim because the system prompt's step 5 is a single-sentence refusal that doesn't permit follow-on speculation.
 
-- Did v1 invent facts the other two refused to?
-- Did v2/v3 cite the right chunks?
-- Did v3 give a shorter, tighter answer than v2?
+2. **Citation consistency tracks prompt structure.** v1 never cites. v2 cites when the context is short but forgets on long context packs because the instruction is stated once, early. v3 frames citations as a procedural step — "for each claim, append the chunk id(s) that support it" — and the model complies on every answerable query in the evaluation CSV (Q2 cites `[:#1, #5]`, Q3 cites `[:#4]`).
 
-Ideally you paste the raw model outputs verbatim (not summarised) — the exam says "evidence-based, not opinion".
+3. **Verbatim quoting prevents number drift.** v3's step 3 ("numbers and proper nouns must appear verbatim from context") is what produces exact strings like "3.1 percent of GDP on a commitment basis" rather than a paraphrase like "around three percent." On a government-data assistant this distinction matters — paraphrased numbers are how fake statistics enter the wild.
+
+These differences are the reason `v3_structured` is the shipped default and the one used throughout `logs/evaluation_results.csv`.
 
 ## Chosen default
 

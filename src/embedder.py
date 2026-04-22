@@ -93,7 +93,13 @@ class Embedder:
                 f"Loading sentence-transformers model '{self.model_name}' "
                 "(first time: downloads ~80MB)..."
             )
-            self._model = SentenceTransformer(self.model_name)
+            # device="cpu" is passed explicitly to avoid a known torch >= 2.6
+            # interaction where sentence-transformers loads weights onto the
+            # "meta" device by default and then calls .to(device), which raises
+            #   "Cannot copy out of meta tensor; no data! Please use
+            #    torch.nn.Module.to_empty() instead of torch.nn.Module.to()"
+            # Forcing CPU at construction time bypasses that meta->device move.
+            self._model = SentenceTransformer(self.model_name, device="cpu")
             log.info("Model loaded.")
 
     def _embed_batch(self, batch, task_type):
