@@ -1,47 +1,65 @@
 # Video Walkthrough Script (≤ 2 minutes)
 
-**Author:** `Andrew Kofi Kwakye`
-**Index:** `10012300027`
+**Author:** Andrew Kofi Kwakye
+**Index:** 10012300027
 
-The exam caps the video at **2 minutes**. Below is a script you can read in ~1m50s — leaves 10 seconds of buffer. Record it with Loom / OBS / Zoom (screen + voice). Upload to YouTube Unlisted or Google Drive with link-sharing, and paste the link in your submission email.
+Plain-English script. Read it once, then record in your own voice — don't read line-by-line.
 
 ---
 
 ## 0:00 – 0:15 — Intro
 
-> "Hi, I'm `Andrew Kofi Kwakye`, index `10012300027`. This is my CS4241 RAG chatbot for Academic City. It answers questions over Ghana's 2025 Budget Statement and historical Ghana election results, and I built every component from scratch — no LangChain or LlamaIndex."
+> "Hi, I'm Andrew Kofi Kwakye, index 10012300027. This is my RAG chatbot for CS4241. It answers questions about Ghana's 2025 Budget and Ghana's past election results. I built every piece of it myself — no ready-made frameworks like LangChain."
 
-## 0:15 – 0:40 — Architecture (show `docs/architecture.md` diagram on screen)
+## 0:15 – 0:40 — How it works (show the architecture diagram)
 
-> "The pipeline has two phases. Offline: I clean the CSV and PDF, split them with a per-source chunker — rows for the CSV, a recursive paragraph-to-sentence splitter for the PDF — embed every chunk locally with sentence-transformers (all-MiniLM-L6-v2, 384-dim), and save a NumPy matrix plus a JSONL metadata file. Online: the query is embedded, scored against every vector, and against a BM25 keyword index I also built on the same tokens. I combine them with an alpha weight, that's my hybrid search. Chat inference runs on Groq's LPU using Llama 3.3 70B."
+> "Here's how it works. First, I take the CSV and the PDF and break them into small pieces I call chunks. Each row of the CSV is one chunk. The PDF I split into short paragraphs.
+>
+> Then I save all the chunks with a tag that represents their meaning, so I can match them later.
+>
+> When someone asks a question, I find the chunks that match best — partly by meaning, partly by the exact words in the question. I take the top few, give them to the AI model, and the model uses those chunks to write the answer."
 
-## 0:40 – 1:05 — Demo an answerable query (share Streamlit window)
+## 0:40 – 1:05 — Ask a question about the budget
 
-> "Here's the deployed app. I'll ask *'What is the projected fiscal deficit for 2025 in Ghana?'* [wait] — it returns a grounded answer with chunk citations, and below I can see the exact chunks that were retrieved, each with its dense score, its BM25 score, and the combined score."
+> "Let me show you. I'll type *'What is the projected fiscal deficit for 2025 in Ghana?'* … It gives me the number straight from the budget document, and it cites the chunks it used. Below the answer I can see which chunks were retrieved and their scores."
 
-## 1:05 – 1:25 — Show the refusal behaviour (adversarial query)
+## 1:05 – 1:25 — Ask a question about the election data
 
-> "Now the interesting part — I'll ask *'What is the cedi-to-yen exchange rate today?'*. That's not in my corpus. The confidence gate sees a low top score, and the v3 prompt instructs the model to refuse. No hallucination — it says it doesn't have enough information."
+> "Now something from the CSV — *'How many votes did the NPP receive in Greater Accra in 2020?'* … Top result is the exact row from the CSV. This shows the chunker handled the two data sources differently — rows for the CSV, paragraphs for the PDF."
 
-## 1:25 – 1:50 — Demonstrate the innovation feature
+## 1:25 – 1:45 — Ask something it should refuse
 
-> "My innovation component is a feedback loop. I'll click 👍 on the correct chunk under my last answer. That signal is appended to a JSONL file, and — watch what happens when I re-run a related query — the same chunk now has a positive boost and rises in the ranking. The boost is clamped so feedback can never override semantic similarity, which keeps the system honest."
+> "Now I'll try something that isn't in my data — *'What is the cedi-to-yen exchange rate today?'* … It refuses instead of making up an answer. That's the whole point — on government data, a wrong answer is worse than no answer."
 
-## 1:50 – 2:00 — Close
+## 1:45 – 2:00 — Show the feedback feature + close
 
-> "The repo is on GitHub at `ai_10012300027`, the full docs for chunking, retrieval, prompts, evaluation, architecture, and the innovation write-up are all in the `docs/` folder. Thanks."
+> "My custom feature is a feedback loop. If I click thumbs-up on a good chunk, it gets a small boost the next time I ask a similar question. Thumbs-down does the opposite. That way the system gets better the more I use it.
+>
+> Code is on GitHub under `ai_10012300027`. Thanks."
 
 ---
 
 ## Filming tips
 
-- **Pre-record** a terminal already showing the index built and the Streamlit app already loaded. The 2-minute cap is brutal; don't waste seconds on boot.
-- **Record at 1080p** so the retrieved-chunk text is readable.
-- **Have two browser tabs open**: the deployed URL and `docs/architecture.md` previewed on GitHub.
-- **Don't read line-by-line** — skim the script, then record. Natural delivery beats perfect wording.
+- Have the Streamlit app already open and the index already built before you hit record. Two minutes goes fast.
+- Pre-test every query once so you know it works. Don't debug on camera.
+- Record at 1080p so the text on screen is readable.
+- Speak a bit slower than feels natural — nerves make people speed up.
+- If you fumble a line, don't stop. Keep going. Record a second take and use the cleaner one.
 
-## What to NOT show in the video
+## What NOT to show
 
-- Your API key (Streamlit secrets are fine, just don't scroll through them).
-- Any other student's work.
-- Internet dead-ends — pre-test the demo queries so they work on the first try.
+- Your API key (if you have to click around settings, skip that bit).
+- Any error messages from earlier testing. Close the terminal if it's showing old output.
+- The inside of `.env` or Streamlit secrets.
+
+## Words you might not want to use on camera
+
+If any of these trip you up, here are simpler swaps you can say instead:
+
+- "embedding" → "turn into a vector" or just "convert it"
+- "vector store" → "the saved index" or "the saved chunks"
+- "hybrid search / BM25" → "I combine a meaning-based match with a keyword match"
+- "confidence gate" → "if the best match isn't strong enough, it refuses"
+- "Groq LPU" → just say "Groq" — it's the company name
+- "llama-3.3-70b-versatile" → just "a large language model" is fine

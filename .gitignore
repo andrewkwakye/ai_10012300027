@@ -43,6 +43,13 @@ data/processed/*.pkl
 data/processed/chunks.jsonl
 logs/*.log
 
+# --- Video files (hosted on Drive/YouTube, not in the repo) ---
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
 # Keep the folder structure visible in git
 !data/processed/.gitkeep
 !logs/.gitkeep
