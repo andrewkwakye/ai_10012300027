@@ -2,7 +2,7 @@
 
 **Author:** `Andrew Kofi Kwakye`
 **Index number:** `10012300027`
-**Course:** CS4241 — Introduction to Artificial Intelligence
+**Course:**  — Introduction to Artificial Intelligence
 **Lecturer:** Godwin N. Danso
 **Semester:** End of Second Semester, 2026
 
